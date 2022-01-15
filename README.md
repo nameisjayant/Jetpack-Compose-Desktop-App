@@ -4,5 +4,5 @@ We can make desktop application through desktop-compose. it is same , as we used
 
 - update the intellij idea upto latest version
 
-- select kotlin -> compose desktop
+- select New project -> kotlin -> compose desktop
 
