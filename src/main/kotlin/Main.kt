@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import network_work.data.Post
 import network_work.data.network.ApiService
 import network_work.data.repository.PostRepository
@@ -58,12 +60,13 @@ fun main() = application {
     val scope = rememberCoroutineScope()
     val viewmodel = PostViewModel(PostRepository(ApiService()), scope)
 
-
     Window(
         onCloseRequest = ::exitApplication,
         title = "Demo App"
     ) {
-        when (val res = viewmodel.response.value) {
+
+
+        when (val res = viewmodel.response.collectAsState(ApiResponse.Empty).value) {
 
             is ApiResponse.Success -> {
                 LazyColumn {

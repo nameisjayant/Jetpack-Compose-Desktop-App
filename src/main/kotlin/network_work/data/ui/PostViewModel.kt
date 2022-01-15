@@ -1,18 +1,16 @@
 package network_work.data.ui
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import network_work.data.repository.PostRepository
 import network_work.utils.ApiResponse
 
 class PostViewModel constructor(private val postRepository: PostRepository, private val scope: CoroutineScope) {
 
-    private val _response: MutableState<ApiResponse> = mutableStateOf(ApiResponse.Loading)
-    val response = _response
+    private val _response: MutableStateFlow<ApiResponse> = MutableStateFlow(ApiResponse.Empty)
+    val response = _response.asStateFlow()
 
     init {
         getPost()
@@ -20,14 +18,13 @@ class PostViewModel constructor(private val postRepository: PostRepository, priv
 
 
     private fun getPost() = scope.launch(Dispatchers.Main) {
+        _response.value = ApiResponse.Loading
         postRepository.getPost()
-            .onStart {
-                response.value = ApiResponse.Loading
-            }.catch { e ->
-                response.value = ApiResponse.Failure(e)
-            }.collect {
-                print(it[0].body)
-                response.value = ApiResponse.Success(it)
+            .catch { e ->
+                _response.value = ApiResponse.Failure(e)
+            }.collect {data->
+                print(data[0].body)
+                _response.value = ApiResponse.Success(data)
             }
     }
 }
