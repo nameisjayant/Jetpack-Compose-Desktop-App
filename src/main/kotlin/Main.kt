@@ -18,7 +18,10 @@ import network_work.data.Post
 import network_work.data.network.ApiService
 import network_work.data.repository.PostRepository
 import network_work.data.ui.PostViewModel
+import network_work.di.appModule
 import network_work.utils.ApiResponse
+import org.koin.core.context.startKoin
+import org.koin.dsl.module
 
 @Composable
 @Preview
@@ -60,13 +63,17 @@ fun main() = application {
     val scope = rememberCoroutineScope()
     val viewmodel = PostViewModel(PostRepository(ApiService()), scope)
 
+    startKoin {
+        modules(appModule)
+    }
+
     Window(
         onCloseRequest = ::exitApplication,
         title = "Demo App"
     ) {
 
 
-        when (val res = viewmodel.response.collectAsState(ApiResponse.Empty).value) {
+        when (val res = BaseApplication().viewmodel.response.collectAsState(ApiResponse.Empty).value) {
 
             is ApiResponse.Success -> {
                 LazyColumn {

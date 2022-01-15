@@ -20,6 +20,8 @@ dependencies {
     implementation(compose.desktop.currentOs)
     implementation("io.ktor:ktor-client-cio:1.6.7")
     implementation("io.ktor:ktor-client-gson:1.6.7")
+    implementation ("io.insert-koin:koin-core:3.1.5")
+    testImplementation ( "io.insert-koin:koin-test:3.1.5")
 }
 
 tasks.withType<KotlinCompile>() {
