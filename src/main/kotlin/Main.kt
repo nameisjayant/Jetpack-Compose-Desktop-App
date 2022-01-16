@@ -22,6 +22,7 @@ import network_work.di.appModule
 import network_work.utils.ApiResponse
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
+import weather_app.data.screens.Header
 
 @Composable
 @Preview
@@ -61,7 +62,7 @@ fun App() {
 
 fun main() = application {
     val scope = rememberCoroutineScope()
-    val viewmodel = PostViewModel(PostRepository(ApiService()), scope)
+
 
     startKoin {
         modules(appModule)
@@ -69,36 +70,42 @@ fun main() = application {
 
     Window(
         onCloseRequest = ::exitApplication,
-        title = "Demo App"
+        title = "Demo App",
+        resizable = false
     ) {
+        //  RestApi()
+        Header()
+    }
+}
 
+@Composable
+@Preview
+fun RestApi() {
+    when (val res = BaseApplication().viewmodel.response.collectAsState(ApiResponse.Empty).value) {
 
-        when (val res = BaseApplication().viewmodel.response.collectAsState(ApiResponse.Empty).value) {
-
-            is ApiResponse.Success -> {
-                LazyColumn {
-                    items(res.data) { post ->
-                        EachRow(post)
-                    }
+        is ApiResponse.Success -> {
+            LazyColumn {
+                items(res.data) { post ->
+                    EachRow(post)
                 }
             }
-            is ApiResponse.Failure -> {
-                Column(
-                    modifier = Modifier.fillMaxSize().padding(20.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Text(text = "${res.msg}")
-                }
+        }
+        is ApiResponse.Failure -> {
+            Column(
+                modifier = Modifier.fillMaxSize().padding(20.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(text = "${res.msg}")
             }
-            ApiResponse.Loading -> {
-                Column(
-                    modifier = Modifier.fillMaxSize().padding(20.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    CircularProgressIndicator()
-                }
+        }
+        ApiResponse.Loading -> {
+            Column(
+                modifier = Modifier.fillMaxSize().padding(20.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                CircularProgressIndicator()
             }
         }
     }
