@@ -6,3 +6,9 @@ We can make desktop application through desktop-compose. it is same , as we used
 
 - select New project -> kotlin -> compose desktop
 
+
+<p align="center">
+
+<img src = "src/main/resources/image.png"/>
+
+</p>

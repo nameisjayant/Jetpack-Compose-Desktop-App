@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import network_work.data.repository.PostRepository
-import network_work.utils.ApiResponse
+import utils.ApiResponse
 
 class PostViewModel constructor(private val postRepository: PostRepository, private val scope: CoroutineScope) {
 
