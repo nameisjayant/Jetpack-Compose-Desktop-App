@@ -33,7 +33,6 @@ fun Header() {
         modifier = Modifier.fillMaxSize().background(backgroundColor),
     ) {
 
-
         Row(
             modifier = Modifier.fillMaxWidth().padding(20.dp),
             horizontalArrangement = Arrangement.SpaceBetween
